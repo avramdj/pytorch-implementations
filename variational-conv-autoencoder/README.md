@@ -34,7 +34,7 @@ Estimated Total Size (MB): 0.83
 
 ### Samples
 
-#### Latent space distribution
+#### Latent distribution
 <img src="https://user-images.githubusercontent.com/48069158/139599947-39d4e935-ce25-46f8-9e26-5001f2e21f2e.png" width="600" height="600">
 
 ![Figure_4](https://user-images.githubusercontent.com/48069158/139599839-b66c3e7a-15af-483f-9eeb-6dc55f23c192.png)
