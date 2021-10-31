@@ -1,5 +1,7 @@
 # Convolutional autoencoder implementation
 
+Convolutional AE with z = 10
+
 ### Summary
 
 ```
