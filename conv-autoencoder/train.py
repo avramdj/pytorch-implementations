@@ -11,7 +11,7 @@ from model import Autoencoder
 from dataset import train_loader
 from util import save_model, get_device
 
-epochs = 1
+epochs = 15
 learning_rate = 1e-3
 input_shape = (1, 28, 28)
 bottleneck_size = 10
