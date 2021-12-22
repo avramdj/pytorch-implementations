@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 
+
 class Autoencoder(nn.Module):
     def __init__(self, **kwargs) -> None:
         super().__init__()

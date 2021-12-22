@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 
+
 class VAE(nn.Module):
     def __init__(self, input_shape=(1, 28, 28), z_size=2) -> None:
         super().__init__()
@@ -45,6 +46,6 @@ class VAE(nn.Module):
         return x
 
     def sample(self, mu, log_var):
-        std = torch.exp(log_var/2)
+        std = torch.exp(log_var / 2)
         eps = torch.randn_like(std)
         return mu + std * eps

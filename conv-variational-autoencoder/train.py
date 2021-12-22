@@ -30,7 +30,7 @@ for epoch in range(epochs):
         optimizer.zero_grad()
         outputs, mus, log_vars = model(imgs)
         kl_divergence = 0.5 * torch.sum(-1 - log_vars + mus.pow(2) + log_vars.exp())
-        bce = nn.functional.binary_cross_entropy(outputs, imgs, reduction='sum')
+        bce = nn.functional.binary_cross_entropy(outputs, imgs, reduction="sum")
         train_loss = bce + kl_divergence
         train_loss.backward()
         optimizer.step()
@@ -40,7 +40,10 @@ for epoch in range(epochs):
 
     loss = loss / len(train_loader)
 
-    print("epoch : {}/{}, loss = {:.6f}, bce = {:.6f}, kl_divergence = {:.6f}"
-        .format(epoch + 1, epochs, loss, bce_total, kl_divergence_total))
+    print(
+        "epoch : {}/{}, loss = {:.6f}, bce = {:.6f}, kl_divergence = {:.6f}".format(
+            epoch + 1, epochs, loss, bce_total, kl_divergence_total
+        )
+    )
 
 save_model(model)

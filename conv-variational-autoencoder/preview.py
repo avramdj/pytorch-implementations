@@ -14,7 +14,7 @@ if len(argv) > 1:
     model_path = argv[1]
     try:
         tmp = int(argv[2])
-        num_examples = min(10, tmp)            
+        num_examples = min(10, tmp)
     except:
         pass
 
@@ -24,7 +24,7 @@ with open(model_path, "rb") as f:
     model = VAE(input_shape=input_shape)
     model.load_state_dict(model_state)
 
-fig, axs = plt.subplots(2, num_examples, figsize=(num_examples*4, 2))
+fig, axs = plt.subplots(2, num_examples, figsize=(num_examples * 4, 2))
 
 for i in range(num_examples):
     sample_idx = torch.randint(len(test_dataset), size=(1,)).item()
@@ -40,7 +40,7 @@ for ax in axs.flat:
     ax.set_xticks([])
     ax.set_yticks([])
 
-axs[0, 0].set_ylabel('original', rotation=0, fontsize=15, labelpad=60)
-axs[1, 0].set_ylabel('generated', rotation=0, fontsize=15, labelpad=70)
+axs[0, 0].set_ylabel("original", rotation=0, fontsize=15, labelpad=60)
+axs[1, 0].set_ylabel("generated", rotation=0, fontsize=15, labelpad=70)
 
 plt.show()
