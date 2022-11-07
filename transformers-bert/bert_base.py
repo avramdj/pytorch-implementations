@@ -64,17 +64,21 @@ class MhaBlock(nn.Module):
 
 
 class EncoderBlock(nn.Module):
-    def __init__(self, d_model, n_heads):
+    def __init__(self, d_model, n_heads, dropout=0.1):
         super().__init__()
         self.mha = MhaBlock(d_model, n_heads=n_heads)
         self.linear = nn.Linear(d_model, d_model)
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
-
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
+        
     def forward(self, x):
-        x = x + self.mha(x, x, x)
+        m = self.mha(x, x, x)
+        x = x + self.dropout1(m)
         x = self.norm1(x)
-        x = x + self.linear(x)
+        m = self.linear(x)
+        x = x + self.dropout1(m)
         x = self.norm2(x)
         return x
 
