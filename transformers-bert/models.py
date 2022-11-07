@@ -62,7 +62,6 @@ class BertClassifier(pl.LightningModule):
         if self.device.type == "cuda":
             x = x.cuda()
         x = self.encode(x)
-        # x = x.last_hidden_state
         x = x[:, 0]  # take only [CLS] token
         x = self.output(x)
         x = F.softmax(x, dim=-1) if self.n_classes > 2 else torch.sigmoid(x)
