@@ -36,7 +36,7 @@ class BertClassifier(pl.LightningModule):
         self.train_acc(o, y)
         self.log("train_loss", loss, on_step=True, on_epoch=False)
         self.log(
-            "train_acc", self.train_acc, on_step=True, on_epoch=False, prog_bar=True
+            "train_acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True
         )
         return loss
 
@@ -49,8 +49,8 @@ class BertClassifier(pl.LightningModule):
         loss = F.binary_cross_entropy(o, y)
 
         self.val_acc(o, y)
-        self.log("val_loss", loss, on_step=True, on_epoch=False)
-        self.log("val_acc", self.val_acc, on_step=True, on_epoch=False, prog_bar=True)
+        self.log("val_loss", loss, on_step=False, on_epoch=True)
+        self.log("val_acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=2e-05)

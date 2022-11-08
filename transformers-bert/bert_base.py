@@ -72,7 +72,7 @@ class EncoderBlock(nn.Module):
         self.norm2 = nn.LayerNorm(d_model)
         self.dropout1 = nn.Dropout(dropout)
         self.dropout2 = nn.Dropout(dropout)
-        
+
     def forward(self, x):
         m = self.mha(x, x, x)
         x = x + self.dropout1(m)

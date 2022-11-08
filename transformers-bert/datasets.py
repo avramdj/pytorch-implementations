@@ -1,6 +1,8 @@
 import pandas as pd
 from torch.utils.data import Dataset
 
+MAX_SEQ_LEN = 512
+
 
 class ImdbDataset(Dataset):
     def __init__(self, file_name):
@@ -10,4 +12,6 @@ class ImdbDataset(Dataset):
         return len(self.df)
 
     def __getitem__(self, idx):
-        return self.df.review[idx][:512], float(self.df.sentiment[idx] == "positive")
+        return self.df.review[idx][:MAX_SEQ_LEN], float(
+            self.df.sentiment[idx] == "positive"
+        )
