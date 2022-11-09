@@ -21,7 +21,7 @@ class PositionalEncoding(nn.Module):
 
 
 class MhaBlock(nn.Module):
-    def __init__(self, d_model, n_heads=10):
+    def __init__(self, d_model, n_heads=10, mask=None):
         super().__init__()
         assert (
             d_model % n_heads == 0
@@ -82,8 +82,8 @@ class Sublayer(nn.Module):
         self.norm = nn.LayerNorm(d_model)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x):
-        l = self.layer(x)
+    def forward(self, x, **kwargs):
+        l = self.layer(x, **kwargs)
         l = self.dropout(l)
         return self.norm(x + l)
 
@@ -91,13 +91,13 @@ class Sublayer(nn.Module):
 class EncoderBlock(nn.Module):
     def __init__(self, d_model, n_heads, dropout=0.1):
         super().__init__()
-        self.sublayers = nn.Sequential(
-            Sublayer(MhaBlock(d_model, n_heads=n_heads), d_model=d_model, dropout=dropout),
-            Sublayer(PositionWiseFFN(d_model), d_model=d_model, dropout=dropout),
-        )
+        self.mha_sublayer = Sublayer(MhaBlock(d_model, n_heads), d_model, dropout)
+        self.ffn_sublayer = Sublayer(PositionWiseFFN(d_model), d_model, dropout)
 
     def forward(self, x):
-        return self.sublayers(x)
+        x = self.mha_sublayer(x)
+        x = self.ffn_sublayer(x)
+        return x
 
 
 class Encoder(nn.Module):
@@ -105,6 +105,33 @@ class Encoder(nn.Module):
         super().__init__()
         self.layers = nn.ModuleList(
             [EncoderBlock(d_model, n_heads) for _ in range(n_layers)]
+        )
+
+    def forward(self, x):
+        for layer in self.layers:
+            x = layer(x)
+        return x
+
+
+class DecoderBlock(nn.Module):
+    def __init__(self, d_model, n_heads, mask=None, dropout=0.1):
+        super().__init__()
+        self.mmha_sublayer = Sublayer(MhaBlock(d_model, n_heads), d_model, dropout)
+        self.mha_sublayer = Sublayer(MhaBlock(d_model, n_heads, mask=mask), d_model, dropout)
+        self.ffn_sublayer = Sublayer(PositionWiseFFN(d_model), d_model, dropout)
+
+    def forward(self, x):
+        masked_q = self.mmha_sublayer(x)
+        x = self.mha_sublayer(x, q=masked_q)
+        x = self.ffn_sublayer(x)
+        return x
+
+
+class Decoder(nn.Module):
+    def __init__(self, d_model, n_layers, n_heads, mask=None):
+        super().__init__()
+        self.layers = nn.ModuleList(
+            [DecoderBlock(d_model, n_heads, mask=mask) for _ in range(n_layers)]
         )
 
     def forward(self, x):
