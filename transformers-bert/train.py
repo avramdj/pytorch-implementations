@@ -29,9 +29,7 @@ if __name__ == "__main__":
     batch_size = args.batch_size
 
     dataset = ImdbDataset(args.dataset_path)
-
     train_dataset, val_dataset = train_test_split(dataset, train_size=0.8)
-
     train_loader = DataLoader(
         train_dataset, batch_size=batch_size, num_workers=args.num_workers, shuffle=True
     )
